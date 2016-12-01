@@ -34,7 +34,7 @@ addons:
             name: "xen-troops/optee_os"
             description: "Build submitted via Travis CI"
         notification_email: joculator@gmail.com
-        build_command_prepend: "cov-configure --comptype gcc --compiler arm-linux-gnueabihf-gcc --template; cov-configure --comptype gcc --compiler aarch64-linux-gnu-gcc --template"
+        build_command_prepend: "cov-configure --comptype gcc --compiler arm-linux-gnueabihf-gcc --template; cov-configure --comptype gcc --compiler aarch64-linux-gnu-gcc --template; cov-configure --list-configured-compilers text"
         build_command: "make -j$NUMCPUS PLATFORM=rpi3 CFG_ARM64_core=y DEBUG=1"
         branch_pattern: coverity-scan
 
