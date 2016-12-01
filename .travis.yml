@@ -20,7 +20,7 @@ before_install:
     - echo -n | openssl s_client -connect scan.coverity.com:441 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
     - wget -c http://releases.linaro.org/components/toolchain/binaries/5.3-2016.05/arm-linux-gnueabihf/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar.xz
     - tar xf gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar.xz
-    - ecport CROSS_COMPILE=arm-linux-gnueabihf-
+    - export CROSS_COMPILE=arm-linux-gnueabihf-
     - export PATH=$PATH:$PWD/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf/bin/
     - export NUMCPUS=`nproc`
     - pip install --upgrade --user pycrypto
