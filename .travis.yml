@@ -18,8 +18,8 @@ branches:
 
 before_install:
     - echo -n | openssl s_client -connect scan.coverity.com:441 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-    - wget -c http://releases.linaro.org/components/toolchain/binaries/5.3-2016.05/aarch64-linux-gnu/gcc-linaro-5.3.1-2016.05-x86_64_aarch64-linux-gnu.tar.xz
-    - tar xf gcc-linaro-5.3.1-2016.05-x86_64_aarch64-linux-gnu.tar.xz
+    - wget -c http://releases.linaro.org/components/toolchain/binaries/5.3-2016.05/arm-linux-gnueabihf/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf.tar.xz
+    - tar xf gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabihf
     - export PATH=$PATH:$PWD/gcc-linaro-5.3.1-2016.05-x86_64_aarch64-linux-gnu/bin/
     - pip install --upgrade --user pycrypto
     - pip install --upgrade --user wand
@@ -30,10 +30,10 @@ addons:
             name: "xen-troops/optee_os"
             description: "Build submitted via Travis CI"
         notification_email: joculator@gmail.com
-        build_command_prepend: "cov-configure --comptype gcc --compiler aarch64-linux-gnu-gcc --template"
-        build_command: "make -j$NUMCPUS PLATFORM=rpi3 CFG_ARM64_core=y"
+        build_command_prepend: "cov-configure --comptype gcc --compiler arm-linux-gnueabihf-gcc --template"
+        build_command: "CROSS_COMPILE=arm-linux-gnueabihf- make -j$NUMCPUS PLATFORM=rpi3 CFG_ARM64_core=y DEBUG=1"
         branch_pattern: coverity-scan
 
 script:
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make -j$NUMCPUS PLATFORM=rpi3 CFG_ARM64_core=y; fi
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then CROSS_COMPILE=arm-linux-gnueabihf- make -j$NUMCPUS PLATFORM=rpi3 CFG_ARM64_core=y DEBUG=1; fi
 
