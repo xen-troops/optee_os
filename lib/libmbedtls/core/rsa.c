@@ -49,6 +49,8 @@ static uint32_t tee_algo_to_mbedtls_hash_algo(uint32_t algo)
 	case TEE_ALG_RSASSA_PKCS1_V1_5_MD5:
 	case TEE_ALG_MD5:
 	case TEE_ALG_HMAC_MD5:
+	case TEE_ALG_RSASSA_PKCS1_PSS_MGF1_MD5
+	case TEE_ALG_RSAES_PKCS1_OAEP_MGF1_MD5:
 		return MBEDTLS_MD_MD5;
 #endif
 #if defined(CFG_CRYPTO_SHA224)
