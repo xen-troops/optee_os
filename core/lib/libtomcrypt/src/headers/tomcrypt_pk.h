@@ -501,6 +501,10 @@ typedef enum ltc_asn1_type_ {
  LTC_ASN1_RAW_BIT_STRING,
  LTC_ASN1_TELETEX_STRING,
  LTC_ASN1_GENERALIZEDTIME,
+ LTC_ASN1_EXP_TAG,
+ /* 20 */
+ LTC_ASN1_ENUMERATED,
+ LTC_ASN1_LONG_INTEGER,
  LTC_ASN1_CUSTOM_TYPE,
 } ltc_asn1_type;
 
@@ -670,6 +674,10 @@ int der_decode_short_integer(const unsigned char *in, unsigned long inlen, unsig
 int der_encode_short_integer(unsigned long num, unsigned char *out, unsigned long *outlen);
 int der_length_short_integer(unsigned long num, unsigned long *outlen);
 
+/* INTEGER -- handy for 0..2^64-1 values */
+int der_encode_long_integer(unsigned long num, unsigned char *out, unsigned long *outlen);
+int der_length_long_integer(unsigned long num, unsigned long *outlen);
+
 /* BIT STRING */
 int der_encode_bit_string(const unsigned char *in, unsigned long inlen,
                                 unsigned char *out, unsigned long *outlen);
@@ -790,6 +798,19 @@ int der_decode_generalizedtime(const unsigned char *in, unsigned long *inlen,
                                ltc_generalizedtime *out);
 
 int der_length_generalizedtime(const ltc_generalizedtime *gtime, unsigned long *outlen);
+
+/* Explicit TAG */
+typedef struct {
+	unsigned long tag; /* tag value */
+	ltc_asn1_list *list; /* asn1 encoded type */
+} ltc_exp_tag;
+
+int der_encode_exp_tag(ltc_exp_tag *tag_st, unsigned char *out, unsigned long *outlen);
+
+int der_length_exp_tag(ltc_exp_tag *tag, unsigned long *outlen, unsigned long *payloadlen);
+
+/* Enumerated */
+int der_encode_enumerated(unsigned long num, unsigned char *out, unsigned long *outlen);
 
 #endif
 

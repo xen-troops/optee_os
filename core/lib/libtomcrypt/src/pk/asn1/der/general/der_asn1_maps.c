@@ -44,6 +44,14 @@ const int der_asn1_type_to_identifier_map[] =
   3, /* LTC_ASN1_RAW_BIT_STRING, */
  20, /* LTC_ASN1_TELETEX_STRING, */
  24, /* LTC_ASN1_GENERALIZEDTIME, */
+ -1, /* LTC_ASN1_EXP_TAG, */
+     /* 20 */
+ -1, /* LTC_ASN1_ENUMERATED, */
+ /* LTC_ASN1_LONG_INTEGER not in Igor's original patch */
+ /* not sure why */
+ /* if not in patch then default to -1 in switch-case-default */
+ /* code of original patch so we add it here */
+ -1, /* LTC_ASN1_LONG_INTEGER, */
  -1, /* LTC_ASN1_CUSTOM_TYPE, */
 };
 const unsigned long der_asn1_type_to_identifier_map_sz = sizeof(der_asn1_type_to_identifier_map)/sizeof(der_asn1_type_to_identifier_map[0]);

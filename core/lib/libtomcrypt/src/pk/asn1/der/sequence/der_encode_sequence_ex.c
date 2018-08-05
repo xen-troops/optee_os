@@ -92,6 +92,13 @@ int der_encode_sequence_ex(const ltc_asn1_list *list, unsigned long inlen,
                }
                break;
 
+           case LTC_ASN1_LONG_INTEGER:
+               z = *outlen;
+               if ((err = der_encode_long_integer(*((unsigned long*)data), out + x, &z)) != CRYPT_OK) {
+                  goto LBL_ERR;
+               }
+               break;
+
            case LTC_ASN1_BIT_STRING:
                z = *outlen;
                if ((err = der_encode_bit_string(data, size, out + x, &z)) != CRYPT_OK) {
@@ -185,6 +192,20 @@ int der_encode_sequence_ex(const ltc_asn1_list *list, unsigned long inlen,
            case LTC_ASN1_CUSTOM_TYPE:
                z = *outlen;
                if ((err = der_encode_custom_type(&list[i], out + x, &z)) != CRYPT_OK) {
+                  goto LBL_ERR;
+               }
+               break;
+
+           case LTC_ASN1_EXP_TAG:
+               z = *outlen;
+               if ((err = der_encode_exp_tag(data, out + x, &z)) != CRYPT_OK) {
+                  goto LBL_ERR;
+               }
+               break;
+
+           case LTC_ASN1_ENUMERATED:
+               z = *outlen;
+               if ((err = der_encode_enumerated(*((unsigned long*)data), out + x, &z)) != CRYPT_OK) {
                   goto LBL_ERR;
                }
                break;

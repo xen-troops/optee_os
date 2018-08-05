@@ -18,6 +18,27 @@
 #ifdef LTC_DER
 
 /**
+  Store an enumerated in the range (0,2^32-1)
+  @param num      The enumerated to encode
+  @param out      [out] The destination for the DER encoded enumerated
+  @param outlen   [in/out] The max size and resulting size of the DER encoded enumerated
+  @return CRYPT_OK if successful
+*/
+int der_encode_enumerated(unsigned long num, unsigned char *out, unsigned long *outlen)
+{
+	int err;
+
+	err = der_encode_short_integer(num, out, outlen);
+
+	if (err == CRYPT_OK) {
+		/* change header for enumerated*/
+		out[0] = 0x0A;
+	}
+
+	return err;
+}
+
+/**
   Store a short integer in the range (0,2^32-1)
   @param num      The integer to encode
   @param out      [out] The destination for the DER encoded integers
