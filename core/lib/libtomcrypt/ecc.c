@@ -30,6 +30,13 @@ err:
 	return TEE_ERROR_OUT_OF_MEMORY;
 }
 
+void crypto_acipher_free_ecc_keypair(struct ecc_keypair *s)
+{
+	crypto_bignum_free(s->d);
+	crypto_bignum_free(s->x);
+	crypto_bignum_free(s->y);
+}
+
 TEE_Result crypto_acipher_alloc_ecc_public_key(struct ecc_public_key *s,
 					       size_t key_size_bits __unused)
 {

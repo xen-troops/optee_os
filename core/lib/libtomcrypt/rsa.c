@@ -118,6 +118,17 @@ err:
 	return TEE_ERROR_OUT_OF_MEMORY;
 }
 
+void crypto_acipher_free_rsa_keypair(struct rsa_keypair *s)
+{
+	crypto_bignum_free(s->e);
+	crypto_bignum_free(s->d);
+	crypto_bignum_free(s->n);
+	crypto_bignum_free(s->p);
+	crypto_bignum_free(s->q);
+	crypto_bignum_free(s->qp);
+	crypto_bignum_free(s->dp);
+}
+
 TEE_Result crypto_acipher_alloc_rsa_public_key(struct rsa_public_key *s,
 					       size_t key_size_bits __unused)
 {
