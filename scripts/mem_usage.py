@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 #
 # Copyright (c) 2014-2017, Linaro Limited
 #
