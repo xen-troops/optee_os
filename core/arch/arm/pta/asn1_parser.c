@@ -65,6 +65,7 @@
 #define CMD_ASN1_GEN_ROOT_EC_CERT 5
 #define CMD_ASN1_GEN_ATT_RSA_CERT 6
 #define CMD_ASN1_GEN_ATT_EC_CERT 7
+#define CMD_ASN1_GEN_ATT_EXTENSION 8
 
 #define MAX_HEADER_SIZE 4
 #define CODE_SEQUENCE 0x30
@@ -394,7 +395,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 					     struct rsa_keypair *keyPair)
 {
 	TEE_Result res = TEE_SUCCESS;
-	uint8_t *tmp_key_attr_buf = malloc(RSA_KEY_BUFFER_SIZE);
+	uint8_t *tmp_key_attr_buf = malloc(RSA_MAX_KEY_BUFFER_SIZE);
 	uint32_t key_attr_buf_size = 0;
 	uint32_t size = 0;
 
@@ -406,7 +407,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 
 	//Public part
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -422,7 +423,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -439,7 +440,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 
 	//Private part:
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -455,7 +456,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -471,7 +472,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -487,7 +488,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -503,7 +504,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -519,7 +520,7 @@ static TEE_Result TA_deserialize_rsa_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > RSA_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > RSA_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -589,7 +590,7 @@ static TEE_Result TA_deserialize_ec_keypair(const uint8_t *in,
 					    struct ecc_keypair *keyPair)
 {
 	TEE_Result res = TEE_SUCCESS;
-	uint8_t *tmp_key_attr_buf = malloc(EC_KEY_BUFFER_SIZE);
+	uint8_t *tmp_key_attr_buf = malloc(EC_MAX_KEY_BUFFER_SIZE);
 	uint32_t key_attr_buf_size = 0;
 	uint32_t a = 0;
 	uint32_t size = 0;
@@ -602,7 +603,7 @@ static TEE_Result TA_deserialize_ec_keypair(const uint8_t *in,
 
 	//Public part:
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > EC_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > EC_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -613,7 +614,7 @@ static TEE_Result TA_deserialize_ec_keypair(const uint8_t *in,
 	keyPair->curve = a;
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > EC_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > EC_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -629,7 +630,7 @@ static TEE_Result TA_deserialize_ec_keypair(const uint8_t *in,
 	}
 
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > EC_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > EC_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -646,7 +647,7 @@ static TEE_Result TA_deserialize_ec_keypair(const uint8_t *in,
 
 	//Private part:
 	memcpy(&key_attr_buf_size, &in[size], sizeof(uint32_t));
-	if (key_attr_buf_size > EC_KEY_BUFFER_SIZE) {
+	if (key_attr_buf_size > EC_MAX_KEY_BUFFER_SIZE) {
 		res = TEE_ERROR_BAD_PARAMETERS;
 		EMSG("Wrong memory buffer length");
 		goto out;
@@ -1706,6 +1707,127 @@ out:
  * params[0].memref.size - attested key buffer length
  * params[1].memref.buffer - key characteristics + attest params
  * params[1].memref.size - key characteristics + attest params buffer length
+ *
+ * OUTPUT
+ * params[2].memref.buffer - ASN.1 DER-encoded extension
+ * params[2].memref.size - ASN.1 DER-encoded extension length
+ */
+static TEE_Result TA_gen_attest_extension(uint32_t ptypes,
+					 TEE_Param params[TEE_NUM_PARAMS])
+{
+	uint32_t exp_param_types = TEE_PARAM_TYPES(
+					TEE_PARAM_TYPE_MEMREF_INPUT,
+					TEE_PARAM_TYPE_MEMREF_INPUT,
+					TEE_PARAM_TYPE_MEMREF_OUTPUT,
+					TEE_PARAM_TYPE_NONE);
+
+	TEE_Result res = TEE_SUCCESS;
+
+	uint8_t *key_charact = params[1].memref.buffer;
+	uint32_t params_characts_size = params[1].memref.size;
+	uint32_t key_charact_size = 0;
+	uint32_t att_params_size = 0;
+	keymaster_key_characteristics_t characteristics;
+	keymaster_key_param_set_t attest_params;
+	uint8_t verified_boot_state = 0xff;
+
+	uint8_t *output_certificate = params[2].memref.buffer;
+	size_t output_certificate_size = params[2].memref.size;
+
+	//Certificate data
+	der_extValue   extVals[ATTEST_EXT_VALS];
+	unsigned char *attestExt = NULL;
+	//End certificate data
+
+	if (ptypes != exp_param_types) {
+		EMSG("Wrong parameters\n");
+		res = TEE_ERROR_BAD_PARAMETERS;
+		goto out;
+	}
+
+	if (!params[0].memref.buffer || !key_charact ||
+	    !output_certificate) {
+		res = TEE_ERROR_BAD_PARAMETERS;
+		EMSG("Wrong memory buffer pointers");
+		goto out;
+	}
+	if (!params[0].memref.size || !params_characts_size ||
+	    !output_certificate_size) {
+		res = TEE_ERROR_BAD_PARAMETERS;
+		EMSG("Wrong memory buffer lengths");
+		goto out;
+	}
+
+	//Key characteristics
+	memcpy(&key_charact_size, &key_charact[0], sizeof(uint32_t));
+	res = TA_deserialize_characteristics(&key_charact[sizeof(uint32_t)],
+					     key_charact_size,
+					     &characteristics);
+	if (res != TEE_SUCCESS) {
+		EMSG("Failed to deserialize RSA key characteristics, res=%x",
+		     res);
+		goto out;
+	}
+	//Attestation parameters
+	memcpy(&att_params_size,
+	       &key_charact[sizeof(uint32_t) + key_charact_size],
+	       sizeof(uint32_t));
+	res = TA_deserialize_param_set(&key_charact[sizeof(uint32_t) * 2 +
+						    key_charact_size],
+				       att_params_size,
+				       &attest_params);
+	if (res != TEE_SUCCESS) {
+		EMSG("Failed to deserialize RSA attestation parameters, res=%x",
+		     res);
+		goto out;
+	}
+
+	verified_boot_state = key_charact[sizeof(uint32_t) * 2 +
+	                                  key_charact_size + att_params_size];
+
+	/* Encode key params */
+	res = encodeKeyDescription(extVals, &attestExt,
+				   &attest_params, &characteristics,
+				   verified_boot_state);
+	if (res != CRYPT_OK) {
+		EMSG("Failed to encode key characteristics, res=%x", res);
+		goto out;
+	}
+
+	if ( output_certificate_size < extVals[1].val_size )
+	{
+		res = TEE_ERROR_SHORT_BUFFER;
+		EMSG("Wrong memory buffer lengths");
+		goto out;
+	}
+
+	output_certificate_size = extVals[1].val_size;
+	memcpy(output_certificate,extVals[1].value,output_certificate_size);
+
+	//Copy ASN.1 DERencoded certificate length
+	params[2].memref.size = output_certificate_size;
+out:
+	if (attestExt)
+		free(attestExt);
+
+	if (characteristics.sw_enforced.params)
+		free(characteristics.sw_enforced.params);
+
+	if (characteristics.hw_enforced.params)
+		free(characteristics.hw_enforced.params);
+
+	if (attest_params.params)
+		free(attest_params.params);
+
+	return res;
+}
+
+/*
+ * INPUT
+ * params[0].memref.buffer - attested key in format: size | buffer, ...
+ * params[0].memref.size - attested key buffer length
+ * params[1].memref.buffer - key characteristics + attest params
+ * params[1].memref.size - key characteristics + attest params buffer length
  * params[2].memref.buffer - root key in format: size | buffer, ...
  * params[2].memref.size - root key buffer length
  *
@@ -2205,6 +2327,8 @@ static TEE_Result invoke_command(void *psess __unused,
 		return TA_gen_attest_rsa_cert(ptypes, params);
 	case CMD_ASN1_GEN_ATT_EC_CERT:
 		return TA_gen_attest_ec_cert(ptypes, params);
+	case CMD_ASN1_GEN_ATT_EXTENSION:
+		return TA_gen_attest_extension(ptypes, params);
 
 	default:
 		break;
