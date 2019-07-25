@@ -96,6 +96,10 @@
 
 #define MAX_ENFORCED_PARAMS_COUNT 30
 #define SIZE_LENGTH sizeof(size_t)
+/* AKMS stands for android keymaster serailzing function */
+#define SIZE_LENGTH_AKMS sizeof(uint32_t)
+
+
 #define SIZE_OF_ITEM(item) (item ? sizeof(item[0]) : 0)
 
 struct import_data_t {
@@ -702,8 +706,8 @@ static uint32_t TA_deserialize_blob(uint8_t *in, keymaster_blob_t *blob)
 	uint32_t size = 0;
 
 	memset(blob, 0, sizeof(*blob));
-	memcpy(&blob->data_length, in, sizeof(blob->data_length));
-	size += SIZE_LENGTH;
+	memcpy(&blob->data_length, in, SIZE_LENGTH_AKMS);
+	size += SIZE_LENGTH_AKMS;
 	//No memory allocation
 	blob->data = &in[size];
 	size += blob->data_length;
