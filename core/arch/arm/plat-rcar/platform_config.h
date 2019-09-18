@@ -66,6 +66,10 @@
 #define NSEC_DDR_1_BASE		0x600000000U
 #define NSEC_DDR_1_SIZE		0x80000000
 
+#elif defined(PLATFORM_FLAVOR_salvator_m3n)
+#define NSEC_DDR_0_BASE		0x47E00000
+#define NSEC_DDR_0_SIZE		0x78200000
+
 #endif
 
 /* Full GlobalPlatform test suite requires TEE_SHMEM_SIZE to be at least 2MB */
