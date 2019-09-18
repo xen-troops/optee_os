@@ -43,7 +43,9 @@ register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICD_BASE, GIC_DIST_REG_SIZE);
 register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICC_BASE, GIC_DIST_REG_SIZE);
 
 register_dynamic_shm(NSEC_DDR_0_BASE, NSEC_DDR_0_SIZE);
+#ifdef NSEC_DDR_1_BASE
 register_dynamic_shm(NSEC_DDR_1_BASE, NSEC_DDR_1_SIZE);
+#endif
 #ifdef NSEC_DDR_2_BASE
 register_dynamic_shm(NSEC_DDR_2_BASE, NSEC_DDR_2_SIZE);
 #endif
