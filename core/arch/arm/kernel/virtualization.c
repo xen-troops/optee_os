@@ -167,6 +167,10 @@ void virt_init_memory(struct tee_mmap_region *memory_map)
 	kmemory_map = memory_map;
 }
 
+volatile void *bss_start __nex_data = (void *)(VCORE_UNPG_RW_PA);
+volatile size_t bss_sz __nex_data = VCORE_UNPG_RW_SZ;
+const void *orig_data_start __nex_data = __data_start;
+void *orig_data_end __nex_data = __data_end;
 
 static int configure_guest_prtn_mem(struct guest_partition *prtn)
 {
@@ -216,17 +220,17 @@ static int configure_guest_prtn_mem(struct guest_partition *prtn)
 
 	core_init_mmu_prtn(prtn->mmu_prtn, prtn->memory_map);
 
-	original_data_pa = virt_to_phys(__data_start);
+	original_data_pa = virt_to_phys(orig_data_start);
 	/* Switch to guest's mappings */
 	core_mmu_set_prtn(prtn->mmu_prtn);
 
 	/* clear .bss */
-	memset((void *)(VCORE_UNPG_RW_PA), 0, VCORE_UNPG_RW_SZ);
+	memset(bss_start, 0, bss_sz);
 
 	/* copy .data section from R/O original */
-	memcpy(__data_start,
+	memcpy(orig_data_start,
 	       phys_to_virt(original_data_pa, MEM_AREA_SEC_RAM_OVERALL),
-	       __data_end - __data_start);
+	       orig_data_end - orig_data_start);
 
 	return 0;
 
