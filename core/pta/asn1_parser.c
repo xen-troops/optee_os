@@ -37,11 +37,14 @@
 //#include <tomcrypt_private.h>
 #include <trace.h>
 #include <crypto/crypto.h>
-#include "mpa.h"
 #include "x509_attestation.h"
 #include "keymaster_defs.h"
 
 #include <tee/tee_cryp_utl.h>
+
+/* Number of bits in mpa_word_t */
+#define MPA_WORD_SIZE                  32
+#define BYTES_PER_WORD          (MPA_WORD_SIZE >> 3)
 
 #define TA_NAME		"asn1_parser.ta"
 
