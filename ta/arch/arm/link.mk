@@ -49,8 +49,11 @@ cleanfiles += $(link-out-dir$(sm))/dyn_list
 
 link-ldadd  = $(user-ta-ldadd) $(addprefix -L,$(libdirs))
 link-ldadd += --start-group $(addprefix -l,$(libnames)) --end-group
-ldargs-$(user-ta-uuid).elf := $(link-ldflags) $(objs) $(link-ldadd)
 
+link-ldadd-after-libgcc += $(addprefix -l,$(libnames-after-libgcc))
+
+ldargs-$(user-ta-uuid).elf := $(link-ldflags) $(objs) $(link-ldadd) \
+				$(libgcc$(sm)) $(link-ldadd-after-libgcc)
 
 link-script-cppflags-$(sm) := \
 	$(filter-out $(CPPFLAGS_REMOVE) $(cppflags-remove), \
@@ -70,6 +73,7 @@ $(link-script-pp$(sm)): $(link-script$(sm)) $(conf-file) $(link-script-pp-makefi
 		$(link-script-cppflags-$(sm)) $$< -o $$@
 
 $(link-out-dir$(sm))/$(user-ta-uuid).elf: $(objs) $(libdeps) \
+					  $(libdeps-after-libgcc) \
 					  $(link-script-pp$(sm)) \
 					  $(dynlistdep) \
 					  $(additional-link-deps)
