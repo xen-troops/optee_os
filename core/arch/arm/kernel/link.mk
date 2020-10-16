@@ -28,7 +28,7 @@ link-objs-init := $(filter-out \
 		    $(out-dir)/core/arch/arm/kernel/link_dummies_init.o, \
 		    $(objs))
 ldargs-tee.elf := $(link-ldflags) $(link-objs) $(link-out-dir)/version.o \
-		  $(link-ldadd) $(libgcccore)
+		  $(libgcccore) $(link-ldadd) $(libgcccore)
 
 link-script-cppflags := \
 	$(filter-out $(CPPFLAGS_REMOVE) $(cppflags-remove), \
@@ -37,7 +37,7 @@ link-script-cppflags := \
 		$(cppflagscore))
 
 ldargs-all_objs := -T $(link-script-dummy) --no-check-sections \
-		   $(link-objs) $(link-ldadd) $(libgcccore)
+		   $(link-objs) $(libgcccore) $(link-ldadd) $(libgcccore)
 cleanfiles += $(link-out-dir)/all_objs.o
 $(link-out-dir)/all_objs.o: $(objs) $(libdeps) $(MAKEFILE_LIST)
 	@$(cmd-echo-silent) '  LD      $@'
@@ -50,7 +50,7 @@ $(link-out-dir)/unpaged_entries.txt: $(link-out-dir)/all_objs.o
 		$(AWK) '/ ____keep_pager/ { printf "-u%s ", $$3 }' > $@
 
 unpaged-ldargs = -T $(link-script-dummy) --no-check-sections --gc-sections
-unpaged-ldadd := $(objs) $(link-ldadd) $(libgcccore)
+unpaged-ldadd := $(objs) $(libgcccore) $(link-ldadd) $(libgcccore)
 cleanfiles += $(link-out-dir)/unpaged.o
 $(link-out-dir)/unpaged.o: $(link-out-dir)/unpaged_entries.txt
 	@$(cmd-echo-silent) '  LD      $@'
@@ -78,8 +78,8 @@ $(link-out-dir)/init_entries.txt: $(link-out-dir)/all_objs.o
 		$(AWK) '/ ____keep_init/ { printf "-u%s ", $$3 }' > $@
 
 init-ldargs := -T $(link-script-dummy) --no-check-sections --gc-sections
-init-ldadd := $(link-objs-init) $(link-out-dir)/version.o  $(link-ldadd) \
-	      $(libgcccore)
+init-ldadd := $(link-objs-init) $(link-out-dir)/version.o $(libgcccore) \
+		$(link-ldadd) $(libgcccore)
 cleanfiles += $(link-out-dir)/init.o
 $(link-out-dir)/init.o: $(link-out-dir)/init_entries.txt
 	$(call gen-version-o)
