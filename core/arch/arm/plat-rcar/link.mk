@@ -11,5 +11,5 @@ $(link-out-dir)/tee-raw.bin: $(link-out-dir)/tee.elf scripts/gen_tee_bin.py
 cleanfiles += $(link-out-dir)/tee.srec
 $(link-out-dir)/tee.srec: $(link-out-dir)/tee-raw.bin
 	@$(cmd-echo-silent) '  SREC    $@'
-	$(q)$(OBJCOPYcore) -I binary -O srec --srec-forceS3  $< $@
+	$(q)$(OBJCOPYcore) -I binary -O srec --srec-forceS3 --adjust-vma=$(CFG_TZDRAM_START) $< $@
 
