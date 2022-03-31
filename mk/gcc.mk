@@ -12,8 +12,12 @@ nostdinc$(sm)	:= -nostdinc -isystem $(shell $(CC$(sm)) \
 			-print-file-name=include 2> /dev/null)
 
 # Get location of libgcc from gcc
+ifeq ($(LIB_GCC_PATH),)
 libgcc$(sm)  	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) $(comp-cflags$(sm)) \
 			-print-libgcc-file-name 2> /dev/null)
+else
+libgcc$(sm)  	:= $(LIB_GCC_PATH)
+endif
 
 # Define these to something to discover accidental use
 CC		:= false
