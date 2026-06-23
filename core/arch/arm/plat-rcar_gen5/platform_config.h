@@ -130,6 +130,37 @@
 #define MEMORY8_SIZE		(MEM_SECTION_SIZE)
 #define MEMORY8_TYPE		MEM_AREA_IO_SEC
 #define MEMORY8_PA_END		(MFIS_BASE + MEMORY8_SIZE)
+
+/*
+ * Non-secure DDR banks (host PA) used to advertise OP-TEE dynamic shared
+ * memory (OPTEE_SMC_SEC_CAP_DYNAMIC_SHM), required by the Xen OP-TEE
+ * mediator.
+ *
+ * Only the high DRAM banks (>=0x10_80000000) are registered: the low bank
+ * (0x40000000-0xC0000000) is full of OP-TEE static maps (TZDRAM/TEE RAM
+ * @0x8C400000, SoC reg block, ...) and firmware-reserved areas, and
+ * core_mmu_set_discovered_nsec_ddr() panics if non-secure DDR overlaps any
+ * such map. Guest RAM (DomD is 8 GiB) does not fit in the low bank and is
+ * placed by Xen in these high banks, so this still covers guest SHM
+ * buffers. Requires CFG_AUTO_MAX_PA_BITS=y (see conf.mk) so PAs >64GB are
+ * addressable. Banks follow r8a78000-ironhide-common.dtsi /memory.
+ */
+#define NSEC_DDR_0_BASE		0x1080000000ULL	/* 2 GiB */
+#define NSEC_DDR_0_SIZE		0x80000000U
+#define NSEC_DDR_1_BASE		0x1200000000ULL	/* 4 GiB each below */
+#define NSEC_DDR_1_SIZE		0x100000000ULL
+#define NSEC_DDR_2_BASE		0x1400000000ULL
+#define NSEC_DDR_2_SIZE		0x100000000ULL
+#define NSEC_DDR_3_BASE		0x1600000000ULL
+#define NSEC_DDR_3_SIZE		0x100000000ULL
+#define NSEC_DDR_4_BASE		0x1800000000ULL
+#define NSEC_DDR_4_SIZE		0x100000000ULL
+#define NSEC_DDR_5_BASE		0x1A00000000ULL
+#define NSEC_DDR_5_SIZE		0x100000000ULL
+#define NSEC_DDR_6_BASE		0x1C00000000ULL
+#define NSEC_DDR_6_SIZE		0x100000000ULL
+#define NSEC_DDR_7_BASE		0x1E00000000ULL
+#define NSEC_DDR_7_SIZE		0x100000000ULL
 #endif	/* CFG_RCAR_GEN5 */
 
 #endif /*PLATFORM_CONFIG_H*/

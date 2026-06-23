@@ -57,6 +57,22 @@ register_phys_mem_pgdir(DEVICE0_TYPE, DEVICE0_PA_BASE, DEVICE0_SIZE);
 register_phys_mem_pgdir(DEVICE1_TYPE, DEVICE1_PA_BASE, DEVICE1_SIZE);
 #endif
 
+/*
+ * Register non-secure DDR so core_mmu_nsec_ddr_is_defined() is true and
+ * OP-TEE advertises dynamic shared memory (required by the Xen OP-TEE
+ * mediator, otherwise EXCHANGE_CAPABILITIES is rejected and the kernel
+ * optee driver fails probe with "capabilities mismatch" / -EINVAL). High
+ * banks only - see platform_config.h.
+ */
+register_ddr(NSEC_DDR_0_BASE, NSEC_DDR_0_SIZE);
+register_ddr(NSEC_DDR_1_BASE, NSEC_DDR_1_SIZE);
+register_ddr(NSEC_DDR_2_BASE, NSEC_DDR_2_SIZE);
+register_ddr(NSEC_DDR_3_BASE, NSEC_DDR_3_SIZE);
+register_ddr(NSEC_DDR_4_BASE, NSEC_DDR_4_SIZE);
+register_ddr(NSEC_DDR_5_BASE, NSEC_DDR_5_SIZE);
+register_ddr(NSEC_DDR_6_BASE, NSEC_DDR_6_SIZE);
+register_ddr(NSEC_DDR_7_BASE, NSEC_DDR_7_SIZE);
+
 #ifdef CFG_SCIF
 static struct hscif_uart_data console_data __nex_bss;
 #endif

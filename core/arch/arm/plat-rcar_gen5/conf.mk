@@ -6,7 +6,27 @@ $(call force,CFG_WITH_ARM_TRUSTED_FW,y)
 $(call force,CFG_GIC,y)
 $(call force,CFG_CORE_LARGE_PHYS_ADDR,y)
 $(call force,CFG_CORE_ARM64_PA_BITS,36)
+# Workaround (COMPILE_TIME_ASSERT was removed in recent optee_os versions):
+# CFG_NS_VIRTUALIZATION requires each guest's base translation table to fit
+# in one 4KB page (core_alloc_mmu_prtn(), core_mmu_lpae.c). Its size is
+# NUM_BASE_TABLES * CFG_TEE_CORE_NB_CORE * NUM_BASE_LEVEL_ENTRIES * 8. With
+# 32 cores and CFG_CORE_UNMAP_CORE_AT_EL0=y (2 tables), a 36-bit VA
+# (level-1, 64 entries) yields 2*32*64*8 = 32KB and fails the
+# COMPILE_TIME_ASSERT. A 33-bit VA stays level-1 with 8 entries -> 2*32*8*8
+# = 4KB, fitting exactly. 8GB of VA is ample: all static maps are below 4GB
+# and guest SHM is mapped on demand into the 32MB MEM_AREA_SHM_VASPACE
+# window, so the high DRAM banks only need PA reach (CFG_AUTO_MAX_PA_BITS),
+# not VA. Non-virtualization builds keep 36-bit VA.
+ifeq ($(CFG_NS_VIRTUALIZATION),y)
+$(call force,CFG_LPAE_ADDR_SPACE_BITS,33)
+else
 $(call force,CFG_LPAE_ADDR_SPACE_BITS,36)
+endif
+# Use the runtime HW PARange (ID_AA64MMFR0_EL1) instead of the hard-coded
+# 36-bit (64GB) limit, so OP-TEE can address and map dynamic SHM in the
+# DRAM banks above 64GB where Xen places guest RAM. Same approach as
+# plat-vexpress (virtualization).
+CFG_AUTO_MAX_PA_BITS ?= y
 # Disable core ASLR for two reasons:
 # 1. There is no source for ALSR seed, as Rcar platform
 # does not provide DTB to OP-TEE. Also, there is no
