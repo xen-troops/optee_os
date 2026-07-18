@@ -123,6 +123,9 @@ $(OPTEE_TA_DEV_KIT_MK):
 		$(CROSS_COMPILE_LINE) \
 		$(OPTEE_EXTRA_FLAGS) ta_dev_kit
 	@echo "Finished building ta_dev_kit ($(PRIVATE_TA_TARGET))..."
+
+# Fix race condition between dev kit and optee core builds
+$(OPTEE_TA_DEV_KIT_MK): $(OPTEE_BIN)
 endif
 
 ##########################################################
